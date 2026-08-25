@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local credentials, browser sessions, and generated data
+.env
+.playwright-mcp/
+data/
+diagnostics/
+
+.github/skills

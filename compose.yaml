@@ -1,0 +1,47 @@
+services:
+  petcheck-calendar:
+    build:
+      context: .
+    init: true
+    restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    shm_size: 1gb
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=256m
+    ports:
+      - "${PETCHECK_CALENDAR_PORT:-8765}:8765"
+    environment:
+      PETCHECK_CALENDAR_HOST: 0.0.0.0
+      PETCHECK_CALENDAR_PORT: 8765
+      PETCHECK_CALENDAR_TIMEZONE: ${PETCHECK_CALENDAR_TIMEZONE:-America/Los_Angeles}
+      PETCHECK_CALENDAR_CALENDAR_NAME: ${PETCHECK_CALENDAR_CALENDAR_NAME:-PetCheck Calendar}
+      PETCHECK_CALENDAR_EVENT_SUMMARY: ${PETCHECK_CALENDAR_EVENT_SUMMARY:-Pet service}
+      PETCHECK_CALENDAR_DEFAULT_DURATION_MINUTES: ${PETCHECK_CALENDAR_DEFAULT_DURATION_MINUTES:-30}
+      PETCHECK_CALENDAR_DETAIL_CACHE_HOURS: ${PETCHECK_CALENDAR_DETAIL_CACHE_HOURS:-24}
+      PETCHECK_CALENDAR_DAYS_AHEAD: ${PETCHECK_CALENDAR_DAYS_AHEAD:-31}
+      PETCHECK_CALENDAR_REFRESH_MINUTES: ${PETCHECK_CALENDAR_REFRESH_MINUTES:-60}
+      PETCHECK_CALENDAR_FEED_TOKEN: ${PETCHECK_CALENDAR_FEED_TOKEN:-}
+      PETCHECK_CALENDAR_USERNAME: ${PETCHECK_CALENDAR_USERNAME:-}
+      PETCHECK_CALENDAR_PASSWORD: ${PETCHECK_CALENDAR_PASSWORD:-}
+      PETCHECK_CALENDAR_DASHBOARD_URL: ${PETCHECK_CALENDAR_DASHBOARD_URL:-https://dashboard.petchecktechnology.com/}
+      PETCHECK_CALENDAR_CALENDAR_URL: ${PETCHECK_CALENDAR_CALENDAR_URL:-}
+      PETCHECK_CALENDAR_EVENT_SELECTOR: ${PETCHECK_CALENDAR_EVENT_SELECTOR:-.calendar_item, .fc-event, [data-start], [data-event-id], [class*='appointment'], [class*='schedule-item']}
+    volumes:
+      - ./data:/app/data
+      - ./diagnostics:/app/diagnostics
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8765/health', timeout=5)
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s

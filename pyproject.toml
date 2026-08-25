@@ -1,0 +1,42 @@
+[project]
+name = "petcheck-calendar"
+version = "0.1.0"
+description = "Publish PetCheck dog-walking appointments as an ICS calendar feed"
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "Stewart Adam", email = "s.adam@diffingo.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.141.1",
+    "icalendar>=7.2.2",
+    "playwright>=1.62.0",
+    "pydantic-settings>=2.15.0",
+    "uvicorn[standard]>=0.52.3",
+]
+
+[project.scripts]
+petcheck-calendar = "petcheck_calendar.cli:main"
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.12.0",
+    "ipykernel>=7.3.0",
+    "ipywidgets>=8.1.9",
+    "prek>=0.2.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.16.3",
+    "tqdm>=4.70.0",
+]
