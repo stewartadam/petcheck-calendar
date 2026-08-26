@@ -44,6 +44,23 @@ def test_parse_fullcalendar_appointment() -> None:
     assert walk.description == "Pet service"
 
 
+def test_parse_appointment_titles_walk_with_pet_and_walker_first_names() -> None:
+    timezone = ZoneInfo("America/Los_Angeles")
+    walk = parse_appointment(
+        RawAppointment(
+            text="2pm\nAva Walker\nAtlas Smith",
+            date_hint="2026-08-27",
+        ),
+        timezone=timezone,
+        default_duration=timedelta(minutes=45),
+        default_summary="Dog walk",
+        reference=datetime(2026, 8, 25, tzinfo=timezone),
+    )
+
+    assert walk is not None
+    assert walk.summary == "Dog Walk - Atlas [Ava]"
+
+
 def test_parse_skips_cancelled_appointment() -> None:
     timezone = ZoneInfo("America/Los_Angeles")
     walk = parse_appointment(

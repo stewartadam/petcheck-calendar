@@ -94,16 +94,25 @@ def parse_appointment(
         description_line = TIME_PREFIX_PATTERN.sub("", line).strip()
         if description_line:
             description_lines.append(description_line)
+    summary = _walk_summary(description_lines, default_summary)
     if raw.url:
         description_lines.append(raw.url)
     return Walk(
         starts_at=starts_at,
         ends_at=ends_at,
-        summary=default_summary,
+        summary=summary,
         description="\n".join(description_lines),
         source_id=source_id,
         url=raw.url,
     )
+
+
+def _walk_summary(description_lines: list[str], default_summary: str) -> str:
+    if len(description_lines) < 2:
+        return default_summary
+    walker_first_name = description_lines[0].split(maxsplit=1)[0]
+    pet_first_name = description_lines[1].split(maxsplit=1)[0]
+    return f"Dog Walk - {pet_first_name} [{walker_first_name}]"
 
 
 def _is_cancelled(raw: RawAppointment) -> bool:
