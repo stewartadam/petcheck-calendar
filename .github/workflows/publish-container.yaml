@@ -30,6 +30,9 @@ jobs:
       - name: Install development environment
         run: uv sync --frozen
 
+      - name: Install Chromium
+        run: uv run playwright install --with-deps --only-shell chromium
+
       - name: Run prek hooks
         run: uv run prek run --all-files
 
