@@ -11,7 +11,7 @@ requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.141.1",
     "icalendar>=7.2.2",
-    "playwright>=1.62.0",
+    "playwright>=1.64.1",
     "pydantic-settings>=2.15.0",
     "uvicorn[standard]>=0.52.3",
 ]
@@ -40,3 +40,8 @@ dev = [
     "ruff>=0.16.3",
     "tqdm>=4.70.0",
 ]
+
+[tool.uv]
+# Playwright 1.64.1 bundles Node.js and Chromium builds that distrust the
+# compromised eMudhra CAs; exempt it from the user-level release cooldown.
+exclude-newer-package = { playwright = "2026-10-23T00:00:00Z" }
